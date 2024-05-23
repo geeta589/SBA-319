@@ -1,10 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import usersRouter from './routes/users.js';;
-
+import usersRouter from './routes/users.js';
+import commentRouter from './routes/comments.js';
+import postRouter from './routes/posts.js';
 dotenv.config();
-
-//App Port 
 const PORT = process.env.PORT || 4000;
 //Express app
 const app = express()
@@ -18,17 +17,17 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/users', usersRouter);
+app.use('/comments', commentRouter);
+app.use('/posts',postRouter);
 
-// =============== Routes ============================== 
-/**
- * GET
- */
+
 app.get('/', (req, res) => {
     console.log(req.body);
     res.send('Welcome to the API!');
 });
 
- app.use('/users', usersRouter);
+ 
 
 
 
@@ -42,4 +41,3 @@ app.use((err, _req, res, next) => {
 app.listen(PORT,()=>{
     console.log(`Server is running on port:${PORT}` );
 })
-

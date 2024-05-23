@@ -1,18 +1,17 @@
 import express from "express";
 import db from "../db/conn.js";
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 import { ObjectId } from "mongodb";
 
 dotenv.config();
 const router = express.Router();
 
-//===== Post data ====
 router.post("/", async (req, res) => {
-  let collection = await db.collection("users");
+  let collection = await db.collection("posts");
   const user = {
-    email: req.body.email,
-    password: req.body.password,
-    username: req.body.username,
+    
+  postid :req.body.postid,
+  postcomment : req. body.postcomment
   };
   let result = await collection.insertOne(user);
   res.send(result).status(201);
@@ -29,11 +28,11 @@ router.get("/", (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-  let collection = await db.collection("users");
+  let collection = await db.collection("posts");
   let query = { _id: new ObjectId(req.params.id) };
   let result = await collection.find(query).toArray();
  
-    // const users = await users.find();
+    console.log(result);
     res.send(result).status(200);
   } catch (error) {
     res.send("Not found").status(404);
@@ -42,7 +41,7 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-  let collection = await db.collection("users");
+  let collection = await db.collection("posts");
   let query = { _id: new ObjectId(req.params.id) };
   console.log(query);
   let result = await collection.deleteOne(query);
@@ -53,17 +52,15 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-//===================
 router.patch("/:id", async (req, res) => {
-  let collection = await db.collection("users");
+  let collection = await db.collection("posts");
   let query = { _id: new ObjectId(req.params.id) };
 
   let result = await collection.updateMany(query, {
-    $set: { username: req.body.username },
+    $set: { postcomment: req.body.postcomment },
   });
 
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
-
 export default router;
